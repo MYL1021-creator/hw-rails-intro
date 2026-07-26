@@ -7,7 +7,11 @@ class MoviesController < ApplicationController
   selected_ratings = params[:ratings]&.keys
   @ratings_to_show =
     selected_ratings.present? ? selected_ratings : @all_ratings
-  @movies = Movie.with_ratings(@ratings_to_show)
+
+  @sort_by =
+    params[:sort_by] if Movie::SORTABLE_COLUMNS.include?(params[:sort_by])
+
+  @movies = Movie.with_ratings(@ratings_to_show).sorted_by(@sort_by)
   end
 
   # GET /movies/1 or /movies/1.json
